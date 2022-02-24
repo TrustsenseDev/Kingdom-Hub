@@ -8,6 +8,6 @@ end)
 if f == true then
     loadstring(d)()
 else
-    game.Players.LocalPlayer:Kick("Not Supported | Discord Link Copied To Clipboard" .. discordinv)
+    game.Players.LocalPlayer:Kick("Not Supported | Discord Link Copied To Clipboard " .. discordinv)
     setclipboard(discordinv)
 end
