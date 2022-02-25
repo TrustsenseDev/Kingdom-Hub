@@ -2,6 +2,12 @@ local ui = loadstring(game:HttpGet("https://raw.githubusercontent.com/Discord000
 local Window = ui:NewWindow("Andromeda Hub", 350, 400)
 ui:SetColors("Legacy")
 
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+    game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+    wait(1)
+    game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+end)
+
 local menus = {
     main = Window:NewMenu("Main"),
     inventory = Window:NewMenu("Inventory"),
