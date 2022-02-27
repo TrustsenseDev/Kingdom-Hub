@@ -8,6 +8,28 @@ game:GetService("Players").LocalPlayer.Idled:connect(function()
     game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
 
+if not isfolder("andromeda") then
+    makefolder("andromeda")
+end
+if isfile("andromeda.txt") == false then
+    (syn and syn.request or http_request)({
+        Url = "http://127.0.0.1:6463/rpc?v=1",
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json",
+            ["Origin"] = "https://discord.com"
+        },
+        Body = game:GetService("HttpService"):JSONEncode({
+            cmd = "INVITE_BROWSER",
+            args = {
+                code = "rh2hXXQNZk"
+            },
+            nonce = game:GetService("HttpService"):GenerateGUID(false)
+        }),
+        writefile("andromeda.txt", "discord")
+    })
+end
+
 local menus = {
     main = Window:NewMenu("Main"),
     inventory = Window:NewMenu("Inventory"),
