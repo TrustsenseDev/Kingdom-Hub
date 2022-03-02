@@ -466,8 +466,8 @@ button({
     Menu = "misc",
     Text = "Redeem All Codes",
     Callback = function()
-        local codesTable = {"FREEAUTOHATCH5", "150KCLICKS", "125KLUCK", "100KLIKES", "75KLIKES", "50KLikes", "30klikes",
-                            "20KLIKES", "freeautohatch"}
+        local codesTable = {"150KCLICKS", "125KLUCK", "100KLIKES", "75KLIKES", "50KLikes", "30klikes",
+                            "20KLIKES", "freeautohatch", "175KLIKELUCK"}
         for _, v in pairs(codesTable) do
             rep.Events.Client.useTwitterCode:InvokeServer(v)
         end
