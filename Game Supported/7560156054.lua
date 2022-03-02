@@ -1,40 +1,40 @@
-local ui = loadstring(game:HttpGet("https://raw.githubusercontent.com/Discord0000/jeff2/main/lib"))()
-local Window = ui:NewWindow("Andromeda Hub", 350, 400)
-ui:SetColors("Legacy")
+local ui = loadstring(game:HttpGet('https://raw.githubusercontent.com/Discord0000/jeff2/main/lib'))()
+local Window = ui:NewWindow('Andromeda Hub', 350, 400)
+ui:SetColors('Legacy')
 
-game:GetService("Players").LocalPlayer.Idled:connect(function()
-    game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+game:GetService('Players').LocalPlayer.Idled:connect(function()
+    game:GetService('VirtualUser'):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
     wait(1)
-    game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+    game:GetService('VirtualUser'):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
 
-if not isfolder("andromeda") then
-    makefolder("andromeda")
+if not isfolder('andromeda') then
+    makefolder('andromeda')
 end
-if isfile("andromeda.txt") == false then
+if isfile('andromeda.txt') == false then
     (syn and syn.request or http_request)({
-        Url = "http://127.0.0.1:6463/rpc?v=1",
-        Method = "POST",
+        Url = 'http://127.0.0.1:6463/rpc?v=1',
+        Method = 'POST',
         Headers = {
-            ["Content-Type"] = "application/json",
-            ["Origin"] = "https://discord.com"
+            ['Content-Type'] = 'application/json',
+            ['Origin'] = 'https://discord.com'
         },
-        Body = game:GetService("HttpService"):JSONEncode({
-            cmd = "INVITE_BROWSER",
+        Body = game:GetService('HttpService'):JSONEncode({
+            cmd = 'INVITE_BROWSER',
             args = {
-                code = "rh2hXXQNZk"
+                code = 'rh2hXXQNZk'
             },
-            nonce = game:GetService("HttpService"):GenerateGUID(false)
+            nonce = game:GetService('HttpService'):GenerateGUID(false)
         }),
-        writefile("andromeda.txt", "discord")
+        writefile('andromeda.txt', 'discord')
     })
 end
 
 local menus = {
-    main = Window:NewMenu("Main"),
-    inventory = Window:NewMenu("Inventory"),
-    rebirth = Window:NewMenu("Rebirth"),
-    misc = Window:NewMenu("Miscellaneous")
+    main = Window:NewMenu('Main'),
+    inventory = Window:NewMenu('Inventory'),
+    rebirth = Window:NewMenu('Rebirth'),
+    misc = Window:NewMenu('Miscellaneous')
 }
 
 local obj = {
@@ -83,7 +83,7 @@ local function dropdown(t)
             else
                 table.insert(tempObj.Selected, s)
             end
-            tempObj:SetText(#tempObj.Selected > 0 and table.concat(tempObj.Selected, ", ") or t.Text)
+            tempObj:SetText(#tempObj.Selected > 0 and table.concat(tempObj.Selected, ', ') or t.Text)
             return t.Callback(tempObj.Selected)
         end)
         tempObj:SetText(t.Text)
@@ -96,7 +96,7 @@ local function textbox(t)
     local tempObj = menus[t.Menu]:NewTextbox(t.Text)
     if t.ClearOnFocus then
         tempObj.OnFocusGained:Connect(function()
-            tempObj:SetText("")
+            tempObj:SetText('')
         end)
     end
     tempObj.OnFocusLost:Connect(function()
@@ -119,7 +119,7 @@ local function label(t)
 end
 
 local plr = game.Players.LocalPlayer
-local rep = game:GetService("ReplicatedStorage")
+local rep = game:GetService('ReplicatedStorage')
 local rebirthShop = require(rep.RebirthShopModule).rebirthShop
 local mod = require(rep.FunctionsModule)
 local wrk = game.Workspace
@@ -135,7 +135,7 @@ local client = {
         autogifts = false
     },
     inventory = {
-        egg = "",
+        egg = '',
         hatch = false,
         triplehatch = false,
         autoshiny = false,
@@ -144,21 +144,21 @@ local client = {
         autodelete = false
     },
     rebirth = {
-        rebirth = "",
+        rebirth = '',
         autorebirth = false,
-        infrebirth = "",
+        infrebirth = '',
         autoinfrebirth = false
     },
     misc = {
-        selectedZone = "",
+        selectedZone = '',
         WalkSpeed = false,
         JumpPower = false
     }
 }
 
 toggle({
-    Menu = "main",
-    Text = "Auto Click",
+    Menu = 'main',
+    Text = 'Auto Click',
     Callback = function(state)
         client.main.autoclick = state
 
@@ -171,8 +171,8 @@ toggle({
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto Spin Wheel",
+    Menu = 'main',
+    Text = 'Auto Spin Wheel',
     Callback = function(state)
         client.main.autospin = state
 
@@ -186,22 +186,22 @@ toggle({
 })
 
 button({
-    Menu = "main",
-    Text = "Unlock x2 Clicks Boost",
+    Menu = 'main',
+    Text = 'Unlock x2 Clicks Boost',
     Callback = function()
         plr.Boosts.DoubleClicks.isActive.Value = true
     end
 })
 
 separate({
-    Menu = "main",
-    Text = "Auto Buy"
+    Menu = 'main',
+    Text = 'Auto Buy'
 })
 
 local function shopTable()
     local shopTable = {}
     for _, v in next, rebirthShop do
-        if rawget(v, "name") then
+        if rawget(v, 'name') then
             table.insert(shopTable, v.name)
         end
     end
@@ -209,8 +209,8 @@ local function shopTable()
 end
 
 toggle({
-    Menu = "main",
-    Text = "Auto Buy Rebirths",
+    Menu = 'main',
+    Text = 'Auto Buy Rebirths',
     Callback = function(state)
         client.main.autobuyrebirths = state
 
@@ -224,8 +224,8 @@ toggle({
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto Buy Jumps",
+    Menu = 'main',
+    Text = 'Auto Buy Jumps',
     Callback = function(state)
         client.main.autobuyjumps = state
 
@@ -239,13 +239,13 @@ toggle({
 })
 
 separate({
-    Menu = "main",
-    Text = "Auto Collect"
+    Menu = 'main',
+    Text = 'Auto Collect'
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto Collect Quests",
+    Menu = 'main',
+    Text = 'Auto Collect Quests',
     Callback = function(state)
         client.main.autoquest = state
 
@@ -261,8 +261,8 @@ toggle({
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto Collect Gifts",
+    Menu = 'main',
+    Text = 'Auto Collect Gifts',
     Callback = function(state)
         client.main.autogifts = state
 
@@ -277,8 +277,8 @@ toggle({
 })
 
 button({
-    Menu = "main",
-    Text = "Collect All Chests",
+    Menu = 'main',
+    Text = 'Collect All Chests',
     Callback = function()
         for _, v in pairs(wrk.Chests:GetChildren()) do
             rep.Events.Client.claimChestReward:InvokeServer(v.Name)
@@ -289,7 +289,7 @@ button({
 local function getEggs()
     local newEggs = {unpack(require(rep.EggModule).Order)}
     for _, v in next, wrk.Eggs:GetChildren() do
-        if not tostring(v):find("Robux") and not table.find(newEggs, tostring(v)) and
+        if not tostring(v):find('Robux') and not table.find(newEggs, tostring(v)) and
             not table.find(require(rep.EggModule).Order, tostring(v)) then
             table.insert(newEggs, tostring(v))
         end
@@ -298,8 +298,8 @@ local function getEggs()
 end
 
 dropdown({
-    Menu = "inventory",
-    Text = "Eggs List",
+    Menu = 'inventory',
+    Text = 'Eggs List',
     Options = getEggs(),
     Callback = function(value)
         client.inventory.egg = value
@@ -307,8 +307,8 @@ dropdown({
 })
 
 toggle({
-    Menu = "inventory",
-    Text = "Auto Hatch",
+    Menu = 'inventory',
+    Text = 'Auto Hatch',
     Callback = function(state)
         client.inventory.hatch = state
 
@@ -320,8 +320,8 @@ toggle({
 })
 
 toggle({
-    Menu = "inventory",
-    Text = "Auto Triple Hatch",
+    Menu = 'inventory',
+    Text = 'Auto Triple Hatch',
     Callback = function(state)
         client.inventory.triplehatch = state
 
@@ -333,13 +333,13 @@ toggle({
 })
 
 separate({
-    Menu = "inventory",
-    Text = "Inventory Management"
+    Menu = 'inventory',
+    Text = 'Inventory Management'
 })
 
 toggle({
-    Menu = "inventory",
-    Text = "Auto Shiny",
+    Menu = 'inventory',
+    Text = 'Auto Shiny',
     Callback = function(state)
         client.inventory.autoshiny = state
 
@@ -353,8 +353,8 @@ toggle({
 })
 
 toggle({
-    Menu = "inventory",
-    Text = "Auto Golden",
+    Menu = 'inventory',
+    Text = 'Auto Golden',
     Callback = function(state)
         client.inventory.autogolden = state
 
@@ -368,8 +368,8 @@ toggle({
 })
 
 toggle({
-    Menu = "inventory",
-    Text = "Auto Equip Best",
+    Menu = 'inventory',
+    Text = 'Auto Equip Best',
     Callback = function(state)
         client.inventory.autobest = state
 
@@ -384,8 +384,8 @@ toggle({
 })
 
 local mass = toggle({
-    Menu = "inventory",
-    Text = "Auto Mass Delete",
+    Menu = 'inventory',
+    Text = 'Auto Mass Delete',
     Callback = function(state)
         client.inventory.autodelete = state
 
@@ -396,12 +396,12 @@ local mass = toggle({
     end
 })
 
-mass:SetTooltip("Auto Equip Best Is Faster")
+mass:SetTooltip('Auto Equip Best Is Faster')
 
 local function giveRebirths()
     local rebirthsTable = {1, 5, 10}
     for _, v in next, rebirthShop do
-        if rawget(v, "rebirthOption") then
+        if rawget(v, 'rebirthOption') then
             table.insert(rebirthsTable, v.rebirthOption)
         end
     end
@@ -409,8 +409,8 @@ local function giveRebirths()
 end
 
 dropdown({
-    Menu = "rebirth",
-    Text = "Rebirth List",
+    Menu = 'rebirth',
+    Text = 'Rebirth List',
     Options = giveRebirths(),
     Callback = function(value)
         client.rebirth.rebirth = value
@@ -418,8 +418,8 @@ dropdown({
 })
 
 toggle({
-    Menu = "rebirth",
-    Text = "Auto Rebirth",
+    Menu = 'rebirth',
+    Text = 'Auto Rebirth',
     Callback = function(state)
         client.rebirth.autorebirth = state
 
@@ -434,21 +434,21 @@ toggle({
 })
 
 separate({
-    Menu = "rebirth",
-    Text = "Infinite Rebirth"
+    Menu = 'rebirth',
+    Text = 'Infinite Rebirth'
 })
 
 textbox({
-    Menu = "rebirth",
-    Text = "Rebirh Amount",
+    Menu = 'rebirth',
+    Text = 'Rebirh Amount',
     Callback = function(value)
         client.rebirth.infrebirth = value
     end
 })
 
 toggle({
-    Menu = "rebirth",
-    Text = "Auto Infinite Rebirth",
+    Menu = 'rebirth',
+    Text = 'Auto Infinite Rebirth',
     Callback = function(state)
         client.rebirth.autoinfrebirth = state
 
@@ -463,11 +463,11 @@ toggle({
 })
 
 button({
-    Menu = "misc",
-    Text = "Redeem All Codes",
+    Menu = 'misc',
+    Text = 'Redeem All Codes',
     Callback = function()
-        local codesTable = {"150KCLICKS", "125KLUCK", "100KLIKES", "75KLIKES", "50KLikes", "30klikes",
-                            "20KLIKES", "freeautohatch", "175KLIKELUCK"}
+        local codesTable = {'150KCLICKS', '125KLUCK', '100KLIKES', '75KLIKES', '50KLikes', '30klikes', '20KLIKES',
+                            'freeautohatch', '175KLIKELUCK'}
         for _, v in pairs(codesTable) do
             rep.Events.Client.useTwitterCode:InvokeServer(v)
         end
@@ -475,32 +475,32 @@ button({
 })
 
 button({
-    Menu = "misc",
-    Text = "Unlock Auto Clicker Gamepass",
+    Menu = 'misc',
+    Text = 'Unlock Auto Clicker Gamepass',
     Callback = function()
-        Gamepass.Value = Gamepass.Value .. ";autoclicker;"
+        Gamepass.Value = Gamepass.Value .. ';autoclicker;'
     end
 })
 
 button({
-    Menu = "misc",
-    Text = "Unlock Auto Rebirth Gamepass",
+    Menu = 'misc',
+    Text = 'Unlock Auto Rebirth Gamepass',
     Callback = function()
-        Gamepass.Value = Gamepass.Value .. ";autorebirth;"
+        Gamepass.Value = Gamepass.Value .. ';autorebirth;'
     end
 })
 
 button({
-    Menu = "misc",
-    Text = "Copy Discord Server Link",
+    Menu = 'misc',
+    Text = 'Copy Discord Server Link',
     Callback = function()
-        setclipboard("https://discord.gg/rh2hXXQNZk")
+        setclipboard('https://discord.gg/rh2hXXQNZk')
     end
 })
 
 separate({
-    Menu = "misc",
-    Text = "Teleport"
+    Menu = 'misc',
+    Text = 'Teleport'
 })
 
 local function giveZones()
@@ -512,8 +512,8 @@ local function giveZones()
 end
 
 dropdown({
-    Menu = "misc",
-    Text = "Zones list",
+    Menu = 'misc',
+    Text = 'Zones list',
     Options = giveZones(),
     Callback = function(value)
         client.misc.selectedZone = value
@@ -521,8 +521,8 @@ dropdown({
 })
 
 button({
-    Menu = "misc",
-    Text = "Teleport",
+    Menu = 'misc',
+    Text = 'Teleport',
     Callback = function()
         plr.Character.HumanoidRootPart.CFrame = CFrame.new(wrk.Zones[client.misc.selectedZone].Island.Platform.UIPart
                                                                .Position)
@@ -530,21 +530,21 @@ button({
 })
 
 separate({
-    Menu = "misc",
-    Text = "Local Player"
+    Menu = 'misc',
+    Text = 'Local Player'
 })
 
 toggle({
-    Menu = "misc",
-    Text = "WalkSpeed",
+    Menu = 'misc',
+    Text = 'WalkSpeed',
     Callback = function(state)
         client.misc.WalkSpeed = state
     end
 })
 
 slider({
-    Menu = "misc",
-    Text = "WalkSpeed",
+    Menu = 'misc',
+    Text = 'WalkSpeed',
     Min = 0,
     Max = 500,
     Def = 16,
@@ -562,16 +562,16 @@ slider({
 })
 
 toggle({
-    Menu = "misc",
-    Text = "JumpPower",
+    Menu = 'misc',
+    Text = 'JumpPower',
     Callback = function(state)
         client.misc.JumpPower = state
     end
 })
 
 slider({
-    Menu = "misc",
-    Text = "JumpPower",
+    Menu = 'misc',
+    Text = 'JumpPower',
     Min = 0,
     Max = 500,
     Def = 50,
