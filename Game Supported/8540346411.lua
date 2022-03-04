@@ -1,39 +1,17 @@
-local ui = loadstring(game:HttpGet("https://raw.githubusercontent.com/Discord0000/jeff2/main/lib"))()
-local Window = ui:NewWindow("Andromeda Hub", 350, 400)
-ui:SetColors("Legacy")
+local ui = loadstring(game:HttpGet('https://raw.githubusercontent.com/Discord0000/jeff2/main/lib'))()
+local Window = ui:NewWindow('Andromeda Hub', 350, 400)
+ui:SetColors('Legacy')
 
-game:GetService("Players").LocalPlayer.Idled:connect(function()
-    game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+game:GetService('Players').LocalPlayer.Idled:connect(function()
+    game:GetService('VirtualUser'):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
     wait(1)
-    game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+    game:GetService('VirtualUser'):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
 
-if not isfolder("andromeda") then
-    makefolder("andromeda")
-end
-if isfile("andromeda.txt") == false then
-    (syn and syn.request or http_request)({
-        Url = "http://127.0.0.1:6463/rpc?v=1",
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json",
-            ["Origin"] = "https://discord.com"
-        },
-        Body = game:GetService("HttpService"):JSONEncode({
-            cmd = "INVITE_BROWSER",
-            args = {
-                code = "rh2hXXQNZk"
-            },
-            nonce = game:GetService("HttpService"):GenerateGUID(false)
-        }),
-        writefile("andromeda.txt", "discord")
-    })
-end
-
 local menus = {
-    main = Window:NewMenu("Main"),
-    inventory = Window:NewMenu("Inventory"),
-    misc = Window:NewMenu("Miscellaneous")
+    main = Window:NewMenu('Main'),
+    inventory = Window:NewMenu('Inventory'),
+    misc = Window:NewMenu('Miscellaneous')
 }
 
 local obj = {
@@ -82,7 +60,7 @@ local function dropdown(t)
             else
                 table.insert(tempObj.Selected, s)
             end
-            tempObj:SetText(#tempObj.Selected > 0 and table.concat(tempObj.Selected, ", ") or t.Text)
+            tempObj:SetText(#tempObj.Selected > 0 and table.concat(tempObj.Selected, ', ') or t.Text)
             return t.Callback(tempObj.Selected)
         end)
         tempObj:SetText(t.Text)
@@ -95,7 +73,7 @@ local function textbox(t)
     local tempObj = menus[t.Menu]:NewTextbox(t.Text)
     if t.ClearOnFocus then
         tempObj.OnFocusGained:Connect(function()
-            tempObj:SetText("")
+            tempObj:SetText('')
         end)
     end
     tempObj.OnFocusLost:Connect(function()
@@ -118,13 +96,13 @@ local function label(t)
 end
 
 local plr = game.Players.LocalPlayer
-local rep = game:GetService("ReplicatedStorage")
-local wrk = game:GetService("Workspace")
+local rep = game:GetService('ReplicatedStorage')
+local wrk = game:GetService('Workspace')
 
 local client = {
     main = {
         autoclick = false,
-        rebirth = "1",
+        rebirth = '1',
         autorebirth = false,
         clickmultiplier = false,
         freeclicker = false,
@@ -137,7 +115,7 @@ local client = {
         autofasterautoclicker = false
     },
     inventory = {
-        egg = "Basic",
+        egg = 'Basic',
         autohatch = false,
         triplehatch = false
     },
@@ -148,8 +126,8 @@ local client = {
 }
 
 toggle({
-    Menu = "main",
-    Text = "Auto Click",
+    Menu = 'main',
+    Text = 'Auto Click',
     Callback = function(state)
         client.main.autoclick = state
 
@@ -161,8 +139,8 @@ toggle({
 })
 
 button({
-    Menu = "main",
-    Text = "Collect All Chests",
+    Menu = 'main',
+    Text = 'Collect All Chests',
     Callback = function()
         for _, v in next, wrk.Scripts.Chests:GetChildren() do
             rep.Events.Chest:FireServer(v)
@@ -171,8 +149,8 @@ button({
 })
 
 separate({
-    Menu = "main",
-    Text = "Rebirth"
+    Menu = 'main',
+    Text = 'Rebirth'
 })
 
 local function getRebirths()
@@ -180,7 +158,7 @@ local function getRebirths()
     for _, v in next, plr.PlayerGui.MainUI.RebirthFrame.Top.Holder.ScrollingFrame:GetChildren() do
         table.insert(rebirthsTable, v.Name)
         for i, v in next, rebirthsTable do
-            if v == "UIGridLayout" or v == "TextLabel" then
+            if v == 'UIGridLayout' or v == 'TextLabel' then
                 table.remove(rebirthsTable, i)
             end
         end
@@ -189,8 +167,8 @@ local function getRebirths()
 end
 
 dropdown({
-    Menu = "main",
-    Text = "Rebirths List",
+    Menu = 'main',
+    Text = 'Rebirths List',
     Options = getRebirths(),
     Callback = function(value)
         client.main.rebirth = value
@@ -198,13 +176,13 @@ dropdown({
 })
 
 local RebirthInfo = label({
-    Menu = "main",
+    Menu = 'main',
     Text = plr.PlayerGui.MainUI.RebirthFrame.Top.Holder.ScrollingFrame[client.main.rebirth].Main.Label.Text
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto Rebirth",
+    Menu = 'main',
+    Text = 'Auto Rebirth',
     Callback = function(state)
         client.main.autorebirth = state
 
@@ -219,123 +197,123 @@ toggle({
 })
 
 separate({
-    Menu = "main",
-    Text = "Upgrades"
+    Menu = 'main',
+    Text = 'Upgrades'
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto Click Multiplier",
+    Menu = 'main',
+    Text = 'Auto Click Multiplier',
     Callback = function(state)
         client.main.clickmultiplier = state
 
         while client.main.clickmultiplier do
             task.wait()
-            rep.Functions.Upgrade:InvokeServer("ClickMultiplier")
+            rep.Functions.Upgrade:InvokeServer('ClickMultiplier')
         end
     end
 })
 
 toggle({
-    Menu = "main",
-    Text = "Free Auto Click ",
+    Menu = 'main',
+    Text = 'Free Auto Click ',
     Callback = function(state)
         client.main.freeclicker = state
 
         while client.main.freeclicker do
             task.wait()
-            rep.Functions.Upgrade:InvokeServer("FreeAutoClicker")
+            rep.Functions.Upgrade:InvokeServer('FreeAutoClicker')
         end
     end
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto Rebirth Buttons",
+    Menu = 'main',
+    Text = 'Auto Rebirth Buttons',
     Callback = function(state)
         client.main.rebirthbuttons = state
 
         while client.main.rebirthbuttons do
             task.wait()
-            rep.Functions.Upgrade:InvokeServer("RebirthButtons")
+            rep.Functions.Upgrade:InvokeServer('RebirthButtons')
         end
     end
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto Walk Speed",
+    Menu = 'main',
+    Text = 'Auto Walk Speed',
     Callback = function(state)
         client.main.walkspeed = state
 
         while client.main.walkspeed do
             task.wait()
-            rep.Functions.Upgrade:InvokeServer("WalkSpeed")
+            rep.Functions.Upgrade:InvokeServer('WalkSpeed')
         end
     end
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto Gems Multiplier",
+    Menu = 'main',
+    Text = 'Auto Gems Multiplier',
     Callback = function(state)
         client.main.gemsmultiplier = state
 
         while client.main.gemsmultiplier do
             task.wait()
-            rep.Functions.Upgrade:InvokeServer("GemsMultiplier")
+            rep.Functions.Upgrade:InvokeServer('GemsMultiplier')
         end
     end
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto 1+ Pet Equip",
+    Menu = 'main',
+    Text = 'Auto 1+ Pet Equip',
     Callback = function(state)
         client.main.automultipet = state
 
         while client.main.automultipet do
             task.wait()
-            rep.Functions.Upgrade:InvokeServer("PetEquip")
+            rep.Functions.Upgrade:InvokeServer('PetEquip')
         end
     end
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto 5+ Pet Storage",
+    Menu = 'main',
+    Text = 'Auto 5+ Pet Storage',
     Callback = function(state)
         client.main.automultistorage = state
 
         while client.main.automultistorage do
             task.wait()
-            rep.Functions.Upgrade:InvokeServer("PetStorage")
+            rep.Functions.Upgrade:InvokeServer('PetStorage')
         end
     end
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto Luck Multiplier",
+    Menu = 'main',
+    Text = 'Auto Luck Multiplier',
     Callback = function(state)
         client.main.autoluckmultiplier = state
 
         while client.main.autoluckmultiplier do
             task.wait()
-            rep.Functions.Upgrade:InvokeServer("LuckMultiplier")
+            rep.Functions.Upgrade:InvokeServer('LuckMultiplier')
         end
     end
 })
 
 toggle({
-    Menu = "main",
-    Text = "Auto Faster Clicker",
+    Menu = 'main',
+    Text = 'Auto Faster Clicker',
     Callback = function(state)
         client.main.autofasterautoclicker = state
 
         while client.main.autofasterautoclicker do
             task.wait()
-            rep.Functions.Upgrade:InvokeServer("FasterFreeAutoClicker")
+            rep.Functions.Upgrade:InvokeServer('FasterFreeAutoClicker')
         end
     end
 })
@@ -349,8 +327,8 @@ local function getEggs()
 end
 
 dropdown({
-    Menu = "inventory",
-    Text = "Rebirths List",
+    Menu = 'inventory',
+    Text = 'Rebirths List',
     Options = getEggs(),
     Callback = function(value)
         client.inventory.egg = value
@@ -358,55 +336,55 @@ dropdown({
 })
 
 toggle({
-    Menu = "inventory",
-    Text = "Auto Hatch",
+    Menu = 'inventory',
+    Text = 'Auto Hatch',
     Callback = function(state)
         client.inventory.autohatch = state
 
         while client.inventory.autohatch do
             task.wait()
-            rep.Functions.Unbox:InvokeServer(client.inventory.egg, "Single")
+            rep.Functions.Unbox:InvokeServer(client.inventory.egg, 'Single')
         end
     end
 })
 
 toggle({
-    Menu = "inventory",
-    Text = "Auto Triple Hatch",
+    Menu = 'inventory',
+    Text = 'Auto Triple Hatch',
     Callback = function(state)
         client.inventory.triplehatch = state
 
         while client.inventory.triplehatch do
             task.wait()
-            rep.Functions.Unbox:InvokeServer(client.inventory.egg, "Triple")
+            rep.Functions.Unbox:InvokeServer(client.inventory.egg, 'Triple')
         end
     end
 })
 
 button({
-    Menu = "misc",
-    Text = "Copy Discord Server Link",
+    Menu = 'misc',
+    Text = 'Copy Discord Server Link',
     Callback = function()
-        setclipboard("https://discord.gg/rh2hXXQNZk")
+        setclipboard('https://discord.gg/rh2hXXQNZk')
     end
 })
 
 separate({
-    Menu = "misc",
-    Text = "Local Player"
+    Menu = 'misc',
+    Text = 'Local Player'
 })
 
 toggle({
-    Menu = "misc",
-    Text = "WalkSpeed",
+    Menu = 'misc',
+    Text = 'WalkSpeed',
     Callback = function(state)
         client.misc.WalkSpeed = state
     end
 })
 
 slider({
-    Menu = "misc",
-    Text = "WalkSpeed",
+    Menu = 'misc',
+    Text = 'WalkSpeed',
     Min = 0,
     Max = 500,
     Def = 16,
@@ -424,16 +402,16 @@ slider({
 })
 
 toggle({
-    Menu = "misc",
-    Text = "JumpPower",
+    Menu = 'misc',
+    Text = 'JumpPower',
     Callback = function(state)
         client.misc.JumpPower = state
     end
 })
 
 slider({
-    Menu = "misc",
-    Text = "JumpPower",
+    Menu = 'misc',
+    Text = 'JumpPower',
     Min = 0,
     Max = 500,
     Def = 50,
@@ -451,7 +429,7 @@ slider({
 })
 
 -- Label Refresh 
-game:GetService("RunService").Heartbeat:Connect(function()
+game:GetService('RunService').Heartbeat:Connect(function()
     RebirthInfo:SetText(plr.PlayerGui.MainUI.RebirthFrame.Top.Holder.ScrollingFrame[client.main.rebirth].Main.Label.Text)
 end)
 
