@@ -1,107 +1,10 @@
-local ui = loadstring(game:HttpGet('https://raw.githubusercontent.com/TrustsenseDev/Library/main/funny.lua'))()
-local Window = ui:NewWindow('Andromeda Hub', 350, 400)
-ui:SetColors('Legacy')
-
-game:GetService('Players').LocalPlayer.Idled:connect(function()
-    game:GetService('VirtualUser'):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-    wait(1)
-    game:GetService('VirtualUser'):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-end)
-
-local menus = {
-    main = Window:NewMenu('Main'),
-    inventory = Window:NewMenu('Inventory'),
-    rebirth = Window:NewMenu('Rebirth'),
-    misc = Window:NewMenu('Miscellaneous')
-}
-
-local obj = {
-    Sliders = {},
-    Buttons = {},
-    Toggles = {},
-    Dropdowns = {},
-    Textboxes = {},
-    Sections = {},
-    Labels = {}
-}
-
--- funcs for lib
-local function button(t)
-    local tempObj = menus[t.Menu]:NewButton(t.Text)
-    tempObj.OnClick:Connect(t.Callback)
-    obj.Buttons[t.Text] = tempObj
-    return tempObj
-end
-
-local function toggle(t)
-    local tempObj = menus[t.Menu]:NewToggle(t.Text)
-    tempObj.OnToggle:Connect(t.Callback)
-    obj.Toggles[t.Text] = tempObj
-    return tempObj
-end
-
-local function slider(t)
-    local tempObj = menus[t.Menu]:NewSlider(t.Text, t.Min, t.Max, t.Def or t.Min)
-    tempObj.OnValueChanged:Connect(t.Callback)
-    obj.Sliders[t.Text] = tempObj
-    return tempObj
-end
-
-local function dropdown(t)
-    local tempObj = menus[t.Menu]:NewDropdown(t.Text, t.Options)
-    if not t.multiOption then
-        tempObj.OnSelection:Connect(t.Callback)
-        obj.Dropdowns[t.Text] = tempObj
-    else
-        tempObj.Selected = {}
-        tempObj.OnSelection:Connect(function(s)
-            local found = table.find(tempObj.Selected, s)
-            if found then
-                table.remove(tempObj.Selected, found)
-            else
-                table.insert(tempObj.Selected, s)
-            end
-            tempObj:SetText(#tempObj.Selected > 0 and table.concat(tempObj.Selected, ', ') or t.Text)
-            return t.Callback(tempObj.Selected)
-        end)
-        tempObj:SetText(t.Text)
-        obj.Dropdowns[t.Text] = tempObj
-    end
-    return tempObj
-end
-
-local function textbox(t)
-    local tempObj = menus[t.Menu]:NewTextbox(t.Text)
-    if t.ClearOnFocus then
-        tempObj.OnFocusGained:Connect(function()
-            tempObj:SetText('')
-        end)
-    end
-    tempObj.OnFocusLost:Connect(function()
-        t.Callback(tempObj:GetText())
-    end)
-    obj.Textboxes[t.Text] = tempObj
-    return tempObj
-end
-
-local function separate(t)
-    local tempObj = menus[t.Menu]:NewSection(t.Text)
-    obj.Sections[t.Text] = tempObj
-    return tempObj
-end
-
-local function label(t)
-    local tempObj = menus[t.Menu]:NewLabel(t.Text)
-    obj.Labels[t.Text] = tempObj
-    return tempObj
-end
-
 local plr = game.Players.LocalPlayer
 local rep = game:GetService('ReplicatedStorage')
 local rebirthShop = require(rep.RebirthShopModule).rebirthShop
 local mod = require(rep.FunctionsModule)
 local wrk = game.Workspace
 local Gamepass = plr.Data.gamepasses
+local vu = game:GetService('VirtualUser')
 
 local client = {
     main = {
@@ -110,47 +13,87 @@ local client = {
         autobuyrebirths = false,
         autobuyjumps = false,
         autoquest = false,
-        autogifts = false
-    },
-    inventory = {
+        autogifts = false,
         egg = '',
         hatch = false,
         triplehatch = false,
         autoshiny = false,
         autogolden = false,
         autobest = false,
-        autodelete = false
-    },
-    rebirth = {
+        autodelete = false,
         rebirth = '',
         autorebirth = false,
         infrebirth = '',
-        autoinfrebirth = false
-    },
-    misc = {
-        selectedZone = '',
-        WalkSpeed = false,
-        JumpPower = false
+        autoinfrebirth = false,
+        selectedZone = ''
     }
 }
 
-toggle({
-    Menu = 'main',
-    Text = 'Auto Click',
+local function invite()
+    if not isfolder('kingdom') then
+        makefolder('kingdom')
+    end
+    if isfile('kingdom.txt') == false then
+        (syn and syn.request or http_request)({
+            Url = 'http://127.0.0.1:6463/rpc?v=1',
+            Method = 'POST',
+            Headers = {
+                ['Content-Type'] = 'application/json',
+                ['Origin'] = 'https://discord.com'
+            },
+            Body = game:GetService('HttpService'):JSONEncode({
+                cmd = 'INVITE_BROWSER',
+                args = {
+                    code = 'WFS3gYURAk'
+                },
+                nonce = game:GetService('HttpService'):GenerateGUID(false)
+            }),
+            writefile('kingdom.txt', 'discord')
+        })
+    end
+end
+
+plr.Idled:connect(function()
+    vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+    wait(1)
+    vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+end)
+
+
+local library = loadstring(game:GetObjects('rbxassetid://7657867786')[1].Source)()
+local Wait = library.subs.Wait
+
+local AndromedaSoftware = library:CreateWindow({
+    Name = 'Kingdom Hub',
+    Themeable = {
+        Info = 'Discord Server: rh2hXXQNZk',
+        Credit = false
+    }
+})
+
+local MainTab = AndromedaSoftware:CreateTab({
+    Name = 'Main'
+})
+
+-- General Section
+local GeneralSection = MainTab:CreateSection({
+    Name = 'General'
+})
+
+GeneralSection:AddToggle({
+    Name = 'Auto Click',
     Callback = function(state)
         client.main.autoclick = state
 
         while client.main.autoclick do
             task.wait()
-            local env = getsenv(plr.PlayerGui.mainUI.LocalScript)
-            env.activateClick()
+            getsenv(plr.PlayerGui.mainUI.LocalScript).activateClick()
         end
     end
 })
 
-toggle({
-    Menu = 'main',
-    Text = 'Auto Spin Wheel',
+GeneralSection:AddToggle({
+    Name = 'Auto Spin Daily Wheel',
     Callback = function(state)
         client.main.autospin = state
 
@@ -163,17 +106,30 @@ toggle({
     end
 })
 
-button({
-    Menu = 'main',
-    Text = 'Unlock x2 Clicks Boost',
+GeneralSection:AddButton({
+    Name = 'Unlock Double Clicks',
     Callback = function()
         plr.Boosts.DoubleClicks.isActive.Value = true
     end
 })
 
-separate({
-    Menu = 'main',
-    Text = 'Auto Buy'
+-- Shops Section
+local ShopSection = MainTab:CreateSection({
+    Name = 'Shop'
+})
+
+ShopSection:AddToggle({
+    Name = 'Auto Buy Jumps',
+    Callback = function(state)
+        client.main.autobuyjumps = state
+
+        while client.main.autobuyjumps do
+            task.wait()
+            for _, v in next, wrk.Clouds:GetChildren() do
+                rep.Events.Client.upgrades.upgradeDoubleJump:FireServer(v.Name, 1)
+            end
+        end
+    end
 })
 
 local function shopTable()
@@ -186,14 +142,13 @@ local function shopTable()
     return shopTable
 end
 
-toggle({
-    Menu = 'main',
-    Text = 'Auto Buy Rebirths',
+ShopSection:AddToggle({
+    Name = 'Auto Buy Rebirths',
     Callback = function(state)
         client.main.autobuyrebirths = state
 
         while client.main.autobuyrebirths do
-            task.wait(0.3)
+            task.wait()
             for _, v in next, (shopTable()) do
                 rep.Events.Client.purchaseRebirthShopItem:FireServer(v)
             end
@@ -201,35 +156,34 @@ toggle({
     end
 })
 
-toggle({
-    Menu = 'main',
-    Text = 'Auto Buy Jumps',
-    Callback = function(state)
-        client.main.autobuyjumps = state
+-- Collect Section
+local CollectSection = MainTab:CreateSection({
+    Name = 'Collect'
+})
 
-        while client.main.autobuyjumps do
-            task.wait(0.2)
-            for _, v in next, wrk.Clouds:GetChildren() do
-                rep.Events.Client.upgrades.upgradeDoubleJump:FireServer(v.Name, 1)
+CollectSection:AddToggle({
+    Name = 'Auto Collect Gifts',
+    Callback = function(state)
+        client.main.autogifts = state
+
+        while client.main.autogifts do
+            task.wait()
+            for _, v in pairs(getconnections(plr.PlayerGui.randomGiftUI.randomGiftBackground.Background.confirm
+                                                 .MouseButton1Click)) do
+                v.Function()
             end
         end
     end
 })
 
-separate({
-    Menu = 'main',
-    Text = 'Auto Collect'
-})
-
-toggle({
-    Menu = 'main',
-    Text = 'Auto Collect Quests',
+CollectSection:AddToggle({
+    Name = 'Auto Collect Achievements',
     Callback = function(state)
         client.main.autoquest = state
 
         while client.main.autoquest do
             task.wait()
-            for i, v in next, plr.currentQuests:GetChildren() do
+            for _, v in next, plr.currentQuests:GetChildren() do
                 if v.questCompleted.Value == true then
                     rep.Events.Client.claimQuest:FireServer(v.Name)
                 end
@@ -238,30 +192,116 @@ toggle({
     end
 })
 
-toggle({
-    Menu = 'main',
-    Text = 'Auto Collect Gifts',
-    Callback = function(state)
-        client.main.autogifts = state
+CollectSection:AddButton({
+    Name = 'Collect All Chests',
+    Callback = function()
+        for _, v in next, wrk.Chests:GetChildren() do
+            rep.Events.Client.claimChestReward:InvokeServer(v.Name)
+        end
+    end
+})
 
-        while client.main.autogifts do
+-- Gamepasses Section
+local GamepassesSection = MainTab:CreateSection({
+    Name = 'Gamepasses & Codes'
+})
+
+GamepassesSection:AddButton({
+    Name = 'Redeem All Codes',
+    Callback = function()
+        local codesTable = {'150KCLICKS', '125KLUCK', '100KLIKES', '75KLIKES', '50KLikes', '30klikes', '20KLIKES',
+                            'freeautohatch', '175KLIKELUCK'}
+        for _, v in pairs(codesTable) do
+            rep.Events.Client.useTwitterCode:InvokeServer(v)
+        end
+    end
+})
+
+GamepassesSection:AddButton({
+    Name = 'Unlock Auto Clicker Gamepass',
+    Callback = function()
+        Gamepass.Value = Gamepass.Value .. ';autoclicker;'
+    end
+})
+
+GamepassesSection:AddButton({
+    Name = 'Unlock Auto Rebirth Gamepass',
+    Callback = function()
+        Gamepass.Value = Gamepass.Value .. ';autorebirth;'
+    end
+})
+
+-- Rebirth Section
+local RebirthSection = MainTab:CreateSection({
+    Name = 'Rebirth',
+    Side = 'Right'
+})
+
+local function giveRebirths()
+    local rebirthsTable = {1, 5, 10}
+    for _, v in next, rebirthShop do
+        if rawget(v, 'rebirthOption') then
+            table.insert(rebirthsTable, v.rebirthOption)
+        end
+    end
+    return rebirthsTable
+end
+
+RebirthSection:AddDropdown({
+    Name = 'Rebirths List',
+    List = giveRebirths(),
+    Callback = function(value)
+        client.main.rebirth = value
+    end
+})
+
+RebirthSection:AddToggle({
+    Name = 'Auto Rebirth',
+    Callback = function(state)
+        client.main.autorebirth = state
+
+        while client.main.autorebirth do
             task.wait()
-            for i, v in pairs(getconnections(plr.PlayerGui.randomGiftUI.randomGiftBackground.Background.confirm
-                                                 .MouseButton1Click)) do
-                v.Function()
+            local calculate = mod.calculateRebirthsCost(plr.Data.Rebirths.Value, client.main.rebirth)
+            if calculate <= tonumber(plr.Data.Clicks.Value) then
+                rep.Events.Client.requestRebirth:FireServer(tonumber(client.main.rebirth), false, false)
             end
         end
     end
 })
 
-button({
-    Menu = 'main',
-    Text = 'Collect All Chests',
-    Callback = function()
-        for _, v in pairs(wrk.Chests:GetChildren()) do
-            rep.Events.Client.claimChestReward:InvokeServer(v.Name)
+-- Infinite Rebirth Section
+local InfRebirthSection = MainTab:CreateSection({
+    Name = 'Infinite Rebirth | Gamepass',
+    Side = 'Right'
+})
+
+InfRebirthSection:AddTextbox({
+    Name = 'Rebirths Amount',
+    Callback = function(value)
+        client.main.infrebirth = value
+    end
+})
+
+InfRebirthSection:AddToggle({
+    Name = 'Auto Infinite Rebirth',
+    Callback = function(state)
+        client.main.autoinfrebirth = state
+
+        while client.main.autoinfrebirth do
+            task.wait()
+            local calculate = mod.calculateRebirthsCost(plr.Data.Rebirths.Value, client.main.infrebirth)
+            if calculate <= tonumber(plr.Data.Clicks.Value) then
+                rep.Events.Client.requestRebirth:FireServer(tonumber(client.main.infrebirth), true, false)
+            end
         end
     end
+})
+
+-- Hatch Section
+local PetsSection = MainTab:CreateSection({
+    Name = 'Pets',
+    Side = 'Right'
 })
 
 local function getEggs()
@@ -275,54 +315,51 @@ local function getEggs()
     return newEggs
 end
 
-dropdown({
-    Menu = 'inventory',
-    Text = 'Eggs List',
-    Options = getEggs(),
+PetsSection:AddDropdown({
+    Name = 'Eggs List',
+    List = getEggs(),
     Callback = function(value)
-        client.inventory.egg = value
+        client.main.egg = value
     end
 })
 
-toggle({
-    Menu = 'inventory',
-    Text = 'Auto Hatch',
+PetsSection:AddToggle({
+    Name = 'Auto Hatch',
     Callback = function(state)
-        client.inventory.hatch = state
+        client.main.hatch = state
 
-        while client.inventory.hatch do
+        while client.main.hatch do
             task.wait(0.1)
-            rep.Events.Client.purchaseEgg2:InvokeServer(wrk.Eggs[client.inventory.egg], false, false)
+            rep.Events.Client.purchaseEgg2:InvokeServer(wrk.Eggs[client.main.egg], false, false)
         end
     end
 })
 
-toggle({
-    Menu = 'inventory',
-    Text = 'Auto Triple Hatch',
+PetsSection:AddToggle({
+    Name = 'Auto Triple Hatch',
     Callback = function(state)
-        client.inventory.triplehatch = state
+        client.main.triplehatch = state
 
-        while client.inventory.triplehatch do
+        while client.main.triplehatch do
             task.wait(0.1)
-            rep.Events.Client.purchaseEgg2:InvokeServer(wrk.Eggs[client.inventory.egg], true, false)
+            rep.Events.Client.purchaseEgg2:InvokeServer(wrk.Eggs[client.main.egg], true, false)
         end
     end
 })
 
-separate({
-    Menu = 'inventory',
-    Text = 'Inventory Management'
+-- Inventory Section
+local InventorySection = MainTab:CreateSection({
+    Name = 'Inventory Management',
+    Side = 'Right'
 })
 
-toggle({
-    Menu = 'inventory',
-    Text = 'Auto Shiny',
+InventorySection:AddToggle({
+    Name = 'Auto Craft Shiny All',
     Callback = function(state)
-        client.inventory.autoshiny = state
+        client.main.autoshiny = state
 
-        while client.inventory.autoshiny do
-            task.wait(0.3)
+        while client.main.autoshiny do
+            task.wait(0.1)
             for _, v in next, plr.petOwned:GetChildren() do
                 rep.Events.Client.upgradePet:FireServer(v.name.Value, 1, v)
             end
@@ -330,14 +367,13 @@ toggle({
     end
 })
 
-toggle({
-    Menu = 'inventory',
-    Text = 'Auto Golden',
+InventorySection:AddToggle({
+    Name = 'Auto Craft Golden All',
     Callback = function(state)
-        client.inventory.autogolden = state
+        client.main.autogolden = state
 
-        while client.inventory.autogolden do
-            task.wait(0.3)
+        while client.main.autogolden do
+            task.wait(0.1)
             for _, v in next, plr.petOwned:GetChildren() do
                 rep.Events.Client.upgradePet:FireServer(v.name.Value, 2, v)
             end
@@ -345,14 +381,13 @@ toggle({
     end
 })
 
-toggle({
-    Menu = 'inventory',
-    Text = 'Auto Equip Best',
+InventorySection:AddToggle({
+    Name = 'Auto Equip Best',
     Callback = function(state)
-        client.inventory.autobest = state
+        client.main.autobest = state
 
-        while client.inventory.autobest do
-            task.wait()
+        while client.main.autobest do
+            task.wait(0.1)
             if plr.PlayerGui.framesUI.petsBackground.Background.background.tools.equipBest.BackgroundColor3 ==
                 Color3.fromRGB(64, 125, 255) then
                 rep.Events.Client.petsTools.equipBest:FireServer()
@@ -361,124 +396,47 @@ toggle({
     end
 })
 
-local mass = toggle({
-    Menu = 'inventory',
-    Text = 'Auto Mass Delete',
+InventorySection:AddToggle({
+    Name = 'Auto Mass Delete',
     Callback = function(state)
-        client.inventory.autodelete = state
+        client.main.autodelete = state
 
-        while client.inventory.autodelete do
-            task.wait(0.5)
+        while client.main.autodelete do
+            task.wait(0.4)
             rep.Events.Client.petsTools.deleteUnlocked:FireServer()
         end
     end
 })
 
-mass:SetTooltip('Auto Equip Best Is Faster')
-
-local function giveRebirths()
-    local rebirthsTable = {1, 5, 10}
-    for _, v in next, rebirthShop do
-        if rawget(v, 'rebirthOption') then
-            table.insert(rebirthsTable, v.rebirthOption)
-        end
-    end
-    return rebirthsTable
-end
-
-dropdown({
-    Menu = 'rebirth',
-    Text = 'Rebirth List',
-    Options = giveRebirths(),
-    Callback = function(value)
-        client.rebirth.rebirth = value
-    end
+-- Credits Section
+local CreditsSection = MainTab:CreateSection({
+    Name = 'Credits & Discord',
+    Side = 'Right'
 })
 
-toggle({
-    Menu = 'rebirth',
-    Text = 'Auto Rebirth',
-    Callback = function(state)
-        client.rebirth.autorebirth = state
-
-        while client.rebirth.autorebirth do
-            task.wait()
-            local calculate = mod.calculateRebirthsCost(plr.Data.Rebirths.Value, client.rebirth.rebirth)
-            if calculate <= tonumber(plr.Data.Clicks.Value) then
-                rep.Events.Client.requestRebirth:FireServer(tonumber(client.rebirth.rebirth), false, false)
-            end
-        end
-    end
+CreditsSection:AddLabel({
+    Name = 'Script: Trustsense#8185'
 })
 
-separate({
-    Menu = 'rebirth',
-    Text = 'Infinite Rebirth'
+CreditsSection:AddLabel({
+    Name = 'User Interface: Pepsi#5229'
 })
 
-textbox({
-    Menu = 'rebirth',
-    Text = 'Rebirh Amount',
-    Callback = function(value)
-        client.rebirth.infrebirth = value
-    end
+CreditsSection:AddLabel({
+    Name = 'Help From: Discord !0000#6303'
 })
 
-toggle({
-    Menu = 'rebirth',
-    Text = 'Auto Infinite Rebirth',
-    Callback = function(state)
-        client.rebirth.autoinfrebirth = state
-
-        while client.rebirth.autoinfrebirth do
-            task.wait()
-            local calculate = mod.calculateRebirthsCost(plr.Data.Rebirths.Value, client.rebirth.infrebirth)
-            if calculate <= tonumber(plr.Data.Clicks.Value) then
-                rep.Events.Client.requestRebirth:FireServer(tonumber(client.rebirth.infrebirth), true, false)
-            end
-        end
-    end
-})
-
-button({
-    Menu = 'misc',
-    Text = 'Redeem All Codes',
+CreditsSection:AddButton({
+    Name = 'Join Discord Server',
     Callback = function()
-        local codesTable = {'150KCLICKS', '125KLUCK', '100KLIKES', '75KLIKES', '50KLikes', '30klikes', '20KLIKES',
-                            'freeautohatch', '175KLIKELUCK'}
-        for _, v in pairs(codesTable) do
-            rep.Events.Client.useTwitterCode:InvokeServer(v)
-        end
+        invite()
+        setclipboard('https://discord.gg/WFS3gYURAk')
     end
 })
 
-button({
-    Menu = 'misc',
-    Text = 'Unlock Auto Clicker Gamepass',
-    Callback = function()
-        Gamepass.Value = Gamepass.Value .. ';autoclicker;'
-    end
-})
-
-button({
-    Menu = 'misc',
-    Text = 'Unlock Auto Rebirth Gamepass',
-    Callback = function()
-        Gamepass.Value = Gamepass.Value .. ';autorebirth;'
-    end
-})
-
-button({
-    Menu = 'misc',
-    Text = 'Copy Discord Server Link',
-    Callback = function()
-        setclipboard('https://discord.gg/rh2hXXQNZk')
-    end
-})
-
-separate({
-    Menu = 'misc',
-    Text = 'Teleport'
+-- Teleport Section
+local TeleportSection = MainTab:CreateSection({
+    Name = 'Teleport'
 })
 
 local function giveZones()
@@ -489,81 +447,37 @@ local function giveZones()
     return zonesTable
 end
 
-dropdown({
-    Menu = 'misc',
-    Text = 'Zones list',
-    Options = giveZones(),
+TeleportSection:AddDropdown({
+    Name = 'Zones List',
+    List = giveZones(),
     Callback = function(value)
-        client.misc.selectedZone = value
+        client.main.selectedZone = value
     end
 })
 
-button({
-    Menu = 'misc',
-    Text = 'Teleport',
-    Callback = function()
-        plr.Character.HumanoidRootPart.CFrame = CFrame.new(wrk.Zones[client.misc.selectedZone].Island.Platform.UIPart
-                                                               .Position)
-    end
+-- Movement Changer
+local MovementSection = MainTab:CreateSection({
+    Name = 'Movement'
 })
 
-separate({
-    Menu = 'misc',
-    Text = 'Local Player'
-})
-
-toggle({
-    Menu = 'misc',
-    Text = 'WalkSpeed',
-    Callback = function(state)
-        client.misc.WalkSpeed = state
-    end
-})
-
-slider({
-    Menu = 'misc',
-    Text = 'WalkSpeed',
+MovementSection:AddSlider({
+    Name = "WalkSpeed",
+    Value = 16,
+    Precise = 2,
     Min = 0,
-    Max = 500,
-    Def = 16,
+    Max = 100,
     Callback = function(value)
-        while task.wait() do
-            if client.misc.WalkSpeed == true then
-                plr.Character.Humanoid.WalkSpeed = value
-            else
-                if client.misc.WalkSpeed == false then
-                    plr.Character.Humanoid.WalkSpeed = 16
-                end
-            end
-        end
+        plr.Character.Humanoid.WalkSpeed = value
     end
 })
 
-toggle({
-    Menu = 'misc',
-    Text = 'JumpPower',
-    Callback = function(state)
-        client.misc.JumpPower = state
-    end
-})
-
-slider({
-    Menu = 'misc',
-    Text = 'JumpPower',
+MovementSection:AddSlider({
+    Name = "JumpPower",
+    Value = 50,
+    Precise = 2,
     Min = 0,
-    Max = 500,
-    Def = 50,
+    Max = 200,
     Callback = function(value)
-        while task.wait() do
-            if client.misc.JumpPower == true then
-                plr.Character.Humanoid.JumpPower = value
-            else
-                if client.misc.JumpPower == false then
-                    plr.Character.Humanoid.JumpPower = 50
-                end
-            end
-        end
+        plr.Character.Humanoid.JumpPower = value
     end
 })
-
-ui:Ready()

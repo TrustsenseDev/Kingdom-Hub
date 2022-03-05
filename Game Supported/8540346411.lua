@@ -1,4 +1,4 @@
-local ui = loadstring(game:HttpGet('https://raw.githubusercontent.com/Discord0000/jeff2/main/lib'))()
+local ui = loadstring(game:HttpGet('https://raw.githubusercontent.com/TrustsenseDev/Library/main/funny.lua'))()
 local Window = ui:NewWindow('Andromeda Hub', 350, 400)
 ui:SetColors('Legacy')
 
