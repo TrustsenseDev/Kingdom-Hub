@@ -22,14 +22,16 @@ local function invite()
     end
 end
 
+local SelectedGame
+
 local discord = "https://discord.gg/mwTwNTbGws"
 local checker = pcall(function()
-    local gameId =
+    SelectedGame =
         game:HttpGet("https://raw.githubusercontent.com/TrustsenseDev/Kingdom-Hub/main/Game%20Supported/" .. game.PlaceId .. ".lua")
 end)
 
 if checker == true then
-    loadstring(gameId)()
+    loadstring(SelectedGame)()
 else
     game.Players.LocalPlayer:Kick("Not Supported | Discord Link Copied To Clipboard " .. discord)
     invite()
