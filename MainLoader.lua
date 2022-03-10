@@ -22,7 +22,7 @@ local function invite()
     end
 end
 
-local discordinv = "https://discord.gg/mwTwNTbGws"
+local discordinv = "https://discord.gg/WFS3gYURAk"
 local d
 local f = pcall(function()
     d =
